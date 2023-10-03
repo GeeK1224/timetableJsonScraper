@@ -1,0 +1,9 @@
+# git ignore
+.venv
+venv
+*.venv
+
+/timetable/data.json
+/timetable/prod.py
+/timetable/replace.py
+/timetable/test.py
