@@ -17,7 +17,7 @@ daysOfWeek = {
     "001000": "Wednesday", 
     "000100": "Thursday",
     "000010": "Friday",
-    "000001": "Saturday", 
+    "000001": "Saturday",
 }
 
 periods = {
@@ -62,6 +62,8 @@ def timetable(classid):
     lessonPeriodDict = {}
     classroomList = []
     classroomDict = {}
+    classroomDict['no_class'] = 'no class'
+
     classData = {}
 
     for classElem in classes:
@@ -88,7 +90,10 @@ def timetable(classid):
     
     for card in cards:
         if card["lessonid"] in lessonList:
-            classroomList.append(card["classroomids"][0])
+            try:
+                classroomList.append(card["classroomids"][0])
+            except IndexError:
+                classroomList.append("no_class")
             # print(f'{daysOfWeek[card["days"]]} - {periods[str(int(card["period"])-1)]} - {subjectDict[lessonSubjectDict[card["lessonid"]]]} - {card["classroomids"][0]}')
     
     for classroom in classrooms:
@@ -98,29 +103,40 @@ def timetable(classid):
     for card in cards:
         classData = {}
         if card["lessonid"] in lessonList:
-            classData["start"] = periods[str(int(card["period"])-1)]
+            try:
+                classData["start"] = periods[str(int(card["period"])-1)]
+            except ValueError:
+                classData["start"] = ""
             classData["period"] = lessonPeriodDict[card["lessonid"]]
             classData["subject"] = subjectDict[lessonSubjectDict[card["lessonid"]]]
-            classData["classroom"] =  classroomDict[card["classroomids"][0]]
+            try:
+                classData["classroom"] =  classroomDict[card["classroomids"][0]]
+            except:
+                classData["classroom"] =  classroomDict["no_class"]
             
-            if daysOfWeek[card["days"]] == "Monday":
-                week["Monday"].append(classData)
-            
-            if daysOfWeek[card["days"]] == "Tuesday":
-                week["Tuesday"].append(classData)
-            
-            if daysOfWeek[card["days"]] == "Wednesday":
-                week["Wednesday"].append(classData)
-            
-            if daysOfWeek[card["days"]] == "Thursday":
-                week["Thursday"].append(classData)
-            
-            if daysOfWeek[card["days"]] == "Friday":
-                week["Friday"].append(classData)
-            
-            if daysOfWeek[card["days"]] == "Saturday":
-                week["Saturday"].append(classData)
-            
-    print(week)
+            if card["days"] != '':
+                if daysOfWeek[card["days"]] == "Monday":
+                    week["Monday"].append(classData)
+                
+                if daysOfWeek[card["days"]] == "Tuesday":
+                    week["Tuesday"].append(classData)
+                
+                if daysOfWeek[card["days"]] == "Wednesday":
+                    week["Wednesday"].append(classData)
+                
+                if daysOfWeek[card["days"]] == "Thursday":
+                    week["Thursday"].append(classData)
+                
+                if daysOfWeek[card["days"]] == "Friday":
+                    week["Friday"].append(classData)
+                
+                if daysOfWeek[card["days"]] == "Saturday":
+                    week["Saturday"].append(classData)
+            else:
+                week["Saturday"].append("no_data")
 
-timetable("*13")
+            
+    return week
+
+tim = timetable("*87")
+print(tim)
