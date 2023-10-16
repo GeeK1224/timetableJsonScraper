@@ -51,7 +51,6 @@ def timetable(classid):
     week["Wednesday"] = []
     week["Thursday"] = []
     week["Friday"] = []
-    week["Saturday"] = []
 
     groupList = []
     cardList = []
@@ -77,16 +76,15 @@ def timetable(classid):
     for lesson in lessons:
         for lessonGroup in lesson["groupids"]:
             if lessonGroup in groupList:
-                a = int(lesson["durationperiods"])/int(lesson["count"])*2
-                b = int(lesson["durationperiods"])/int(lesson["count"])
                 lessonSubjectDict[lesson["id"]] = lesson["subjectid"]
-                lessonPeriodDict[lesson["id"]] = a if a > 1.0 else b
                 lessonList.append(lesson["id"])
                 subjectList.append(lesson["subjectid"])
-    
+                lessonPeriodDict[lesson["id"]] = int(lesson["durationperiods"])/2
+                    
+
     for subject in subjects:
         if subject["id"] in subjectList:
-            subjectDict[subject["id"]] = subject["name"]
+            subjectDict[subject["id"]] = subject["short"]
     
     for card in cards:
         if card["lessonid"] in lessonList:
@@ -98,7 +96,7 @@ def timetable(classid):
     
     for classroom in classrooms:
         if classroom["id"] in classroomList:
-            classroomDict[classroom["id"]] = classroom["short"]
+            classroomDict[classroom["id"]] = classroom["name"]
    
     for card in cards:
         classData = {}
@@ -129,14 +127,17 @@ def timetable(classid):
                 
                 if daysOfWeek[card["days"]] == "Friday":
                     week["Friday"].append(classData)
-                
-                if daysOfWeek[card["days"]] == "Saturday":
-                    week["Saturday"].append(classData)
-            else:
-                week["Saturday"].append("no_data")
-
             
     return week
 
-tim = timetable("*87")
+classes = data["r"]["dbiAccessorRes"]["tables"][12]["data_rows"] # Classes
+def groupIter():
+    groupList = []
+    for classElem in classes:
+        print(f"{classElem['name']}:{classElem['id']}")
+
+tim = timetable("*13")
 print(tim)
+# groupIter()
+# print(tim)
+# print(classes)
