@@ -56,6 +56,7 @@ def timetable(classid):
     cardList = []
     subjectList = []
     subjectDict = {}
+    subjectColorDict = {}
     lessonList = []
     lessonSubjectDict = {}
     lessonPeriodDict = {}
@@ -85,6 +86,7 @@ def timetable(classid):
     for subject in subjects:
         if subject["id"] in subjectList:
             subjectDict[subject["id"]] = subject["short"]
+            subjectColorDict[subject["id"]] = subject["color"]
     
     for card in cards:
         if card["lessonid"] in lessonList:
@@ -107,6 +109,7 @@ def timetable(classid):
                 classData["start"] = ""
             classData["period"] = lessonPeriodDict[card["lessonid"]]
             classData["subject"] = subjectDict[lessonSubjectDict[card["lessonid"]]]
+            classData["color"] = subjectColorDict[lessonSubjectDict[card["lessonid"]]]
             try:
                 classData["classroom"] =  classroomDict[card["classroomids"][0]]
             except:
